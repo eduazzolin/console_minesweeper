@@ -80,15 +80,6 @@ class Main:
             except Exception as e:
                 print('Invalid coordinates!')
 
-    def discover(self, spot: Spot):
-        """
-        Discover a spot and its neighbours if it is a zero
-
-        :param spot: the spot to be discovered
-        """
-        spot = self.camp.discover_spot(spot)
-        if spot.neighbours_bombs == 0:
-            self.camp.discover_neighbour_zeroes(spot)
 
     def check_game_state(self):
         """
@@ -127,8 +118,7 @@ class Main:
           |,4-  ) )_   .;.(  `'-'   |       you should rest now...|
          '---''(_/._)-'(_\_)        +-----------------------------+
 
-
-            
+            {Colors.RESET}            
             """)
 
         if game_state == 'GAME_OVER':
@@ -157,7 +147,8 @@ if __name__ == '__main__':
     main.clear_console()
     while main.game_state == 'RUNNING':
         main.show_camp(mode='NORMAL')
-        main.discover(main.ask_coordinates())
+        # main.show_camp(mode='ID')
+        main.camp.discover(main.ask_coordinates())
         main.game_state = main.check_game_state()
         main.clear_console()
 

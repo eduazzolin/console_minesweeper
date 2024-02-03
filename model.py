@@ -90,7 +90,6 @@ class Spot:
 
         :atributes neighbours_ids: the ids of the neighbours spots
         :atributes neighbours_bombs: the quantity of bombs in the neighbours spots
-        :atributes neighbours_zeroes_ids: the ids of the neighbours spots with no bombs
         """
         self.spot_id = spot_id
         self.y_axis = y_axis
@@ -99,7 +98,6 @@ class Spot:
         self.is_covered = is_covered
         self.neighbours_ids: list[int] = []
         self.neighbours_bombs: int = 0
-        self.neighbours_zeroes_ids: list[int] = []
 
 
 class Camp:
@@ -120,7 +118,6 @@ class Camp:
         self.generate_bomb_ids()
         self.generate_spots()
         self.generate_neighbours_ids()
-        self.generate_neighbours_zeroes_ids()
 
     def generate_bomb_ids(self):
         """
@@ -161,36 +158,32 @@ class Camp:
                     spot.neighbours_ids.append(neighbour.spot_id)
                     if neighbour.is_bomb: spot.neighbours_bombs += 1
 
-    def generate_neighbours_zeroes_ids(self):
-        """
-        Generate the ids of the neighbours spots with no bombs for all the spots in the camp
-        """
-        for spot in self.spots:
-            for neighbour in self.spots:
-                if neighbour.spot_id in spot.neighbours_ids and neighbour.neighbours_bombs == 0:
-                    spot.neighbours_zeroes_ids.append(neighbour.spot_id)
 
-    def discover_spot(self, spot: Spot):
+    def discover(self, spot: Spot):
         """
         Mark a spot as discovered
         :param spot: the spot to be discovered
         """
         spot.is_covered = False
+        if spot.neighbours_bombs == 0:
+            self.discover_neighbour_when_zero(spot)
+
         return spot
 
-    def discover_neighbour_zeroes(self, spot: Spot):
+    def discover_neighbour_when_zero(self, spot: Spot):
         """
-        Discover the neighbours spots with zero bomb neighbours
+        Discover recursively the neighbours spots when a spot with zero bomb neighbours is discovered
         :param spot: the spot which neighbours will be discovered
         """
-        sid = spot.spot_id
-        if len(spot.neighbours_zeroes_ids) > 0:
-            neighbour_spots_zeroes = [neighbour for neighbour in self.spots if
-                                      neighbour.spot_id in spot.neighbours_zeroes_ids if
-                                      neighbour.is_covered]
-            for neighbour in neighbour_spots_zeroes:
-                self.discover_spot(neighbour)
-                self.discover_neighbour_zeroes(neighbour)
+        neighbour_spots = [neighbour for neighbour in self.spots if neighbour.spot_id in spot.neighbours_ids if
+                           neighbour.is_covered]
+
+        for neighbour in neighbour_spots:
+            neighbour.is_covered = False
+            if neighbour.neighbours_bombs == 0:
+                self.discover_neighbour_when_zero(neighbour)
+
+
 
     def reveal_camp(self):
         """
