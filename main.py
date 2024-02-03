@@ -66,7 +66,6 @@ class Main:
         print('\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n')
         print('\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n')
 
-
     def ask_coordinates(self):
         """
         Ask the user for the coordinates and return the spot
@@ -121,13 +120,41 @@ class Main:
         self.show_camp()
 
         if game_state == 'WIN':
-            print('\n you won!')
+            print(f"""{Colors.F_BLUE}
+            
+    Zzzzz  |\      _,,,--,,_        +-----------------------------+
+           /,`.-'`'   ._  \-;;,_    |  Congratulations, you won!  |
+          |,4-  ) )_   .;.(  `'-'   |       you should rest now...|
+         '---''(_/._)-'(_\_)        +-----------------------------+
+
+
+            
+            """)
+
         if game_state == 'GAME_OVER':
-            print('\n game over!')
+            # https://emojicombos.com/nuke-ascii-art
+            print(f"""{Colors.F_RED}
+            ⢀⣀⣀⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+    ⠀⠀⠀⠀⣠⡴⢾⠅⠀⠀⠀⠉⠁⠉⠉⠰⡤⢀⠀⠀⠀
+    ⠀⢀⠖⠚⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠑⡷⡀⠀
+    ⠀⢞⢆⠀⠀⠀⠀⠀⠀⣀⠀⡀⠀⠀⠀⠀⠀⠀⠀⢧⠀
+    ⠀⠀⠫⢄⣠⣤⣄⣤⣿⠛⠟⠻⢻⣿⣆⠀⢀⣠⣤⠞⠀
+    ⠀⠀⠀⠀⠈⠉⠉⠛⢻⠀⠀⠀⢸⠿⠛⠛⠋⠉⠁⠀⠀
+    ⠀⠀⠀⠀⠀⠀⢀⣀⠽⡀⡀⣰⠸⢤⣀⠀⠀⠀⠀⠀⠀
+    ⠀⠀⠀⠀⢰⡊⠀⠀⡀⢀⡁⣀⣀⠀⠀⣼⠆⠀⠀⠀⠀
+    ⠀⠀⠀⠀⠀⠉⠙⠛⢻⢹⠋⡋⣿⠛⠉⠁⠀⠀⠀⠀⠀
+    ⠀⠀⠀⠀⡀⠤⠀⣰⣞⠸⠀⠇⢸⠖⡐⠄⠀⠀⠀⠀⠀
+    ⠀⣀⣴⣾⣿⣿⣾⣠⣏⠀⡤⣠⡈⢧⣝⣷⣶⣄⡀⠀⠀
+    ⠈⠀⠁⠈⠙⠹⠿⠿⠷⠻⡿⣿⠿⠿⠿⠻⠻⠯⠻⠖⡆
+                
+    
+            game over!{Colors.RESET}""")
+
+
 
 if __name__ == '__main__':
     main = Main(CAMP_SIZE=9, BOMB_QUANTITY=10)
-
+    main.clear_console()
     while main.game_state == 'RUNNING':
         main.show_camp(mode='NORMAL')
         main.discover(main.ask_coordinates())
