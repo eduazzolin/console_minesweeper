@@ -1,10 +1,12 @@
+import os
+
 from model import *
 from model import Colors
 
 GAME_STATES = ['RUNNING', 'WIN', 'GAME_OVER']
 CAMP_SIZE: int = 9
 BOMB_QUANTITY: int = 20
-COVERED_SYMBOL = f'{Colors.B_GRAY} + {Colors.RESET}'
+COVERED_SYMBOL = f'{Colors.B_GRAY}{Colors.F_BLACK} + {Colors.RESET}'
 BOMB_SYMBOL = f'{Colors.B_RED}{Colors.F_WHITE} * {Colors.RESET}'
 
 game_state = 'RUNNING'
@@ -31,9 +33,17 @@ def show_camp(mode: str = 'NORMAL'):
                 if spot.is_bomb:
                     print(BOMB_SYMBOL, end="")
                 else:
-                    print(f'{Colors.NEIGHBOUR_BOMBS_COLORS[spot.neighbours_bombs]} {spot.neighbours_bombs} {Colors.RESET}', end="")
+                    print(
+                        f'{Colors.NEIGHBOUR_BOMBS_COLORS[spot.neighbours_bombs]}{Colors.F_BLACK} {spot.neighbours_bombs} {Colors.RESET}',
+                        end="")
 
         print()
+
+
+def clear_console():
+    print('\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n')
+    print('\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n')
+    print('\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n')
 
 
 def ask_coordinates():
@@ -77,6 +87,6 @@ while game_state == GAME_STATES[0]:
     show_camp(mode='NORMAL')
     discover(ask_coordinates())
     game_state = check_game_state()
+    clear_console()
 
 end_game(game_state)
-
