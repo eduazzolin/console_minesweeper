@@ -79,9 +79,20 @@ class Colors:
     }
 
 
-
 class Spot:
     def __init__(self, spot_id: int, y_axis: int, x_axis: int, is_bomb: bool, is_covered: bool = True):
+        """
+        A spot in the camp
+        :param spot_id: the spot id starting from 1
+        :param y_axis: the y axis position starting from 0
+        :param x_axis: the x axis position starting from 0
+        :param is_bomb: if the spot is a bomb
+        :param is_covered: if the spot is covered
+
+        :atributes neighbours_ids: the ids of the neighbours spots
+        :atributes neighbours_bombs: the quantity of bombs in the neighbours spots
+        :atributes neighbours_zeroes_ids: the ids of the neighbours spots with no bombs
+        """
         self.spot_id = spot_id
         self.y_axis = y_axis
         self.x_axis = x_axis
@@ -94,6 +105,14 @@ class Spot:
 
 class Camp:
     def __init__(self, bomb_quantity: int, camp_size: int):
+        """
+        The camp
+        :param bomb_quantity: the amount of bombs in the camp
+        :param camp_size: the amount of rows in the camp
+        :atributes bomb_ids: the ids of the spots with bombs
+        :atributes spots: the objects spots in the camp
+
+        """
         self.bomb_quantity = bomb_quantity
         self.camp_size = camp_size
         self.bomb_ids: list[int] = []
@@ -105,12 +124,18 @@ class Camp:
         self.generate_neighbours_zeroes_ids()
 
     def generate_bomb_ids(self):
+        """
+        Generate the ids of the spots with bombs randomly
+        """
         bomb_locations_temp = set()
         while len(bomb_locations_temp) < self.bomb_quantity:
             bomb_locations_temp.add(rd.randint(1, (self.camp_size ** 2)))
         self.bomb_ids = list(bomb_locations_temp)
 
     def generate_spots(self):
+        """
+        Generate the spots in the camp
+        """
         spot_id = 1
         for y_axis in range(0, self.camp_size):
             for x_axis in range(0, self.camp_size):
@@ -123,6 +148,10 @@ class Camp:
                 spot_id += 1
 
     def generate_neighbours_ids(self):
+        """
+        Generate the ids of the neighbours spots and the quantity of bombs in the neighbours spots
+        for all the spots in the camp
+        """
         for spot in self.spots:
             for neighbour in self.spots:
                 if (
@@ -134,17 +163,27 @@ class Camp:
                     if neighbour.is_bomb: spot.neighbours_bombs += 1
 
     def generate_neighbours_zeroes_ids(self):
+        """
+        Generate the ids of the neighbours spots with no bombs for all the spots in the camp
+        """
         for spot in self.spots:
             for neighbour in self.spots:
                 if neighbour.spot_id in spot.neighbours_ids and neighbour.neighbours_bombs == 0:
                     spot.neighbours_zeroes_ids.append(neighbour.spot_id)
 
     def discover_spot(self, spot: Spot):
+        """
+        Mark a spot as discovered
+        :param spot: the spot to be discovered
+        """
         spot.is_covered = False
         return spot
 
-
     def discover_neighbour_zeroes(self, spot: Spot):
+        """
+        Discover the neighbours spots with zero bomb neighbours
+        :param spot: the spot which neighbours will be discovered
+        """
         sid = spot.spot_id
         if len(spot.neighbours_zeroes_ids) > 0:
             neighbour_spots_zeroes = [neighbour for neighbour in self.spots if
@@ -155,5 +194,17 @@ class Camp:
                 self.discover_neighbour_zeroes(neighbour)
 
     def reveal_camp(self):
+        """
+        Mark all the spots as discovered
+        """
         for spot in self.spots:
             spot.is_covered = False
+
+    def get_spot(self, x_axis: int, y_axis: int):
+        """
+        Get a spot by its x and y axis
+        :param x_axis: the x axis position starting from 0
+        :param y_axis: the y axis position starting from 0
+        :return: an object Spot
+        """
+        return [spot for spot in self.spots if spot.y_axis == y_axis if spot.x_axis == x_axis][0]
