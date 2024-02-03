@@ -1,5 +1,3 @@
-import os
-
 from model import *
 from model import Colors
 
@@ -46,12 +44,19 @@ def clear_console():
     print('\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n')
 
 
-def ask_coordinates():
-    coordinates = input('\nEnter the coordinates, for example, A1: ')
-    coordinate_x = view_x_axis.index(coordinates[:1].upper())
-    coordinate_y = view_y_axis.index(coordinates[1:2])
+def get_spot(coordinate_x, coordinate_y):
     return [spot for spot in camp.spots if spot.y_axis == coordinate_y if spot.x_axis == coordinate_x][0]
 
+
+def ask_coordinates():
+    while True:
+        try:
+            coordinates = input('\nEnter the coordinates, for example, A1: ')
+            coordinate_x = view_x_axis.index(coordinates[:1].upper())
+            coordinate_y = view_y_axis.index(coordinates[1:2])
+            return get_spot(coordinate_x, coordinate_y)
+        except Exception as e:
+            print('Invalid coordinates!')
 
 def discover(spot: Spot):
     spot = camp.discover_spot(spot)
@@ -83,7 +88,6 @@ def end_game(game_state):
 
 
 while game_state == GAME_STATES[0]:
-    show_camp(mode='ID')
     show_camp(mode='NORMAL')
     discover(ask_coordinates())
     game_state = check_game_state()

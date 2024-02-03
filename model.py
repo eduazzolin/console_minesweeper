@@ -2,6 +2,8 @@ import random as rd
 
 
 class Colors:
+    # https://github.com/eduazzolin/python_ansi_color_sheethttps://github.com/eduazzolin/python_ansi_color_sheet
+
     # Variables for ANSI escape codes for font colors
     F_RED = '\033[38;2;255;0;0m'
     F_GREEN = '\033[38;2;0;255;0m'
