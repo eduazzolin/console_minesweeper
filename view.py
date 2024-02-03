@@ -1,11 +1,8 @@
 
 
 
-
 class View:
-
-
-
+    pass
 
 """    def __init__(self, model: Model):
         self.model = model

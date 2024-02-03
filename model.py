@@ -1,14 +1,26 @@
 import random as rd
 
 
+class Colors:
+    RED = '\033[91m'
+    GREEN = '\033[92m'
+    YELLOW = '\033[93m'
+    BLUE = '\033[94m'
+    GRAY = '\033[90m'
+    BOLD = '\033[1m'
+    ENDC = '\033[0m'
+
+
 class Spot:
-    def __init__(self, spot_id: int, y_axis: int, x_axis: int, is_bomb: bool, is_discovered: bool):
+    def __init__(self, spot_id: int, y_axis: int, x_axis: int, is_bomb: bool, is_covered: bool = True):
         self.spot_id = spot_id
         self.y_axis = y_axis
         self.x_axis = x_axis
         self.is_bomb = is_bomb
-        self.is_discovered = is_discovered
-        self.touches_ids: list[int] = []
+        self.is_covered = is_covered
+        self.neighbours_ids: list[int] = []
+        self.neighbours_bombs: int = 0
+        self.neighbours_zeroes_ids: list[int] = []
 
 
 class Camp:
@@ -20,7 +32,8 @@ class Camp:
 
         self.generate_bomb_ids()
         self.generate_spots()
-        self.generate_spot_touches()
+        self.generate_neighbours_ids()
+        self.generate_neighbours_zeroes_ids()
 
     def generate_bomb_ids(self):
         bomb_locations_temp = set()
@@ -37,12 +50,25 @@ class Camp:
                     y_axis=y_axis,
                     x_axis=x_axis,
                     is_bomb=True if spot_id in self.bomb_ids else False,
-                    is_discovered=False
                 ))
                 spot_id += 1
 
-    def generate_spot_touches(self):
+    def generate_neighbours_ids(self):
         for spot in self.spots:
-            for colleague in self.spots:
-                if abs(colleague.y_axis - spot.y_axis) <= 1 and abs(colleague.x_axis - spot.x_axis) <= 1:
-                    spot.touches_ids.append(colleague.spot_id)
+            for neighbour in self.spots:
+                if (
+                        abs(neighbour.y_axis - spot.y_axis) <= 1 and
+                        abs(neighbour.x_axis - spot.x_axis) <= 1 and
+                        neighbour.spot_id != spot.spot_id
+                ):
+                    spot.neighbours_ids.append(neighbour.spot_id)
+                    if neighbour.is_bomb: spot.neighbours_bombs += 1
+
+    def generate_neighbours_zeroes_ids(self):
+        for spot in self.spots:
+            for neighbour in self.spots:
+                if neighbour.spot_id in spot.neighbours_ids and neighbour.neighbours_bombs == 0:
+                    spot.neighbours_zeroes_ids.append(neighbour.spot_id)
+
+    def discover(self, spot: Spot):
+        pass
