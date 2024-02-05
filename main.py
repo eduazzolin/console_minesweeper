@@ -80,7 +80,6 @@ class Main:
             except Exception as e:
                 print('Invalid coordinates!')
 
-
     def check_game_state(self):
         """
         Check if the game is over or if the player won
@@ -139,7 +138,6 @@ class Main:
                 
     
             game over!{Colors.RESET}""")
-
 
 
 if __name__ == '__main__':

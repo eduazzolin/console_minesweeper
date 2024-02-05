@@ -158,7 +158,6 @@ class Camp:
                     spot.neighbours_ids.append(neighbour.spot_id)
                     if neighbour.is_bomb: spot.neighbours_bombs += 1
 
-
     def discover(self, spot: Spot):
         """
         Mark a spot as discovered
@@ -182,8 +181,6 @@ class Camp:
             neighbour.is_covered = False
             if neighbour.neighbours_bombs == 0:
                 self.discover_neighbour_when_zero(neighbour)
-
-
 
     def reveal_camp(self):
         """
